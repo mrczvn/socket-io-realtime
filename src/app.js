@@ -1,15 +1,18 @@
 const express = require('express');
-const path = require('path');
+const { join } = require('path');
+const socket = require('socket.io');
+const handleSocketConn = require('./helpers/socket');
 
 const app = express();
 
-const public = path.resolve(__dirname, '../public');
-
-app.use(express.static(public));
+app.use(express.static(join(__dirname, '../public')));
 
 app.get('/', (req, res) => {
-  const filePath = path.resolve(__dirname, '../index.html');
-  res.sendFile(filePath);
+  res.sendFile('index.html');
 });
+
+app.io = socket();
+
+handleSocketConn({ io: app.io });
 
 module.exports = app;
